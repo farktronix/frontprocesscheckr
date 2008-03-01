@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+   Growl Registration Ticket.growlRegDict
+   FrontProcessCheckr
+
+   Created by Jacob Farkas on 2/29/08.
+   Copyright 2008 __MyCompanyName__. All rights reserved.
+-->
+<plist version="1.0">
+    <dict>
+        <key>TicketVersion</key>
+        <integer>1</integer>
+        <key>AllNotifications</key>
+        <array>
+            <string>Front Process Changed</string>
+        </array>
+        <key>DefaultNotifications</key>
+        <array>
+            <string>Front Process Changed</string>
+        </array>
+    </dict>
+</plist>
