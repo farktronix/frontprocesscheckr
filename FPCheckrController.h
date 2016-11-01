@@ -14,6 +14,8 @@
     IBOutlet NSButton *_monitorButton;
     
     NSTimer *_checkFrontProcessTimer;
+    NSString *_lastProcessName;
+    
     BOOL _monitoring;
     ProcessSerialNumber _lastFrontProcess;
 }
