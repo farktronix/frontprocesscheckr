@@ -10,17 +10,25 @@
 
 @implementation FPCheckrController
 
-- (void) _displayProcessChangedNotification:(NSString *)frontProcessName iconData:(NSData *)icon
+- (void) _displayProcessChangedNotification:(NSString *)newProcessName lastProcessName:(NSString *)oldProcessName iconData:(NSData *)icon
 {
-    NSLog(@"New front process is %@", frontProcessName);
-    [GrowlApplicationBridge
-        notifyWithTitle:@"Front Process Changed"
-        description:frontProcessName
-        notificationName:@"Front Process Changed"
-        iconData:icon
-        priority:0
-        isSticky:NO
-        clickContext:nil];
+    NSString *oldString = [NSString stringWithFormat:@"Old front process: %@", oldProcessName];
+    NSString *newString = [NSString stringWithFormat:@"New front process: %@", newProcessName];
+    NSLog(@"%@", oldString);
+    NSLog(@"%@", newString);
+    NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
+    NSUserNotification *notification = [[NSUserNotification alloc] init];
+    notification.title = newString;
+    notification.subtitle = oldString;
+    [center deliverNotification: notification];
+//    [GrowlApplicationBridge
+//        notifyWithTitle:@"Front Process Changed"
+//        description:newProcessName
+//        notificationName:@"Front Process Changed"
+//        iconData:icon
+//        priority:0
+//        isSticky:NO
+//        clickContext:nil];
 }
 
 - (NSData *) _iconForProcess:(ProcessSerialNumber *)psn
@@ -57,12 +65,15 @@
         memcpy(&_lastFrontProcess, &frontProcess, sizeof(ProcessSerialNumber));
         CFStringRef processName = NULL;
         CopyProcessName(&frontProcess, &processName);
-        
-        [self _displayProcessChangedNotification:(NSString *)processName iconData:[self _iconForProcess:&frontProcess]];
+
+        [self _displayProcessChangedNotification:(NSString *)processName lastProcessName:(NSString *)_lastProcessName iconData:[self _iconForProcess:&frontProcess]];
+
+        if (_lastProcessName) { [_lastProcessName release]; }
+        _lastProcessName = [[NSString alloc] initWithString: (NSString *)processName];
         if (processName) CFRelease(processName);
     }
 }
- 
+
 - (void) _disableTimer
 {
     [_checkFrontProcessTimer invalidate];
@@ -89,6 +100,8 @@
 - (void) dealloc
 {
     [self _disableTimer];
+    [_lastProcessName release];
+    _lastProcessName = nil;
     [super dealloc];
 }
 
